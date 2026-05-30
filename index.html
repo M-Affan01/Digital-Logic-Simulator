@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuantumLogic - DLD Simulator</title>
+    <!-- Modern Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="brand">
+                <i class="fa-solid fa-bolt-lightning pulse-icon"></i>
+                <div class="brand-text">
+                    <h1>QuantumLogic</h1>
+                    <span>Digital Logic Simulator</span>
+                </div>
+            </div>
+            <div class="actions-bar">
+                <button id="btn-play" class="btn btn-success" title="Run Simulation (Real-time propagation)"><i
+                        class="fa-solid fa-play"></i> Run</button>
+                <button id="btn-clock" class="btn btn-purple" title="Toggle Clock Pulse Ticking"><i
+                        class="fa-solid fa-clock"></i> Toggle Clock</button>
+                <button id="btn-clear" class="btn btn-danger" title="Clear Canvas"><i class="fa-solid fa-trash"></i>
+                    Clear</button>
+                <button id="btn-save" class="btn btn-secondary" title="Save Circuit State"><i
+                        class="fa-solid fa-floppy-disk"></i> Save</button>
+                <button id="btn-load" class="btn btn-secondary" title="Load Circuit State"><i
+                        class="fa-solid fa-folder-open"></i> Load</button>
+            </div>
+        </header>
+
+        <!-- Main Body -->
+        <div class="main-body">
+            <!-- Sidebar: Gate Selector & Presets -->
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <h3><i class="fa-solid fa-microchip"></i> Inputs & Outputs</h3>
+                    <div class="gate-grid">
+                        <div class="gate-item" draggable="true" data-type="INPUT">
+                            <i class="fa-solid fa-toggle-on"></i>
+                            <span>Switch (Input)</span>
+                        </div>
+                        <div class="gate-item" draggable="true" data-type="CLOCK">
+                            <i class="fa-solid fa-heartbeat"></i>
+                            <span>Clock (Pulse)</span>
+                        </div>
+                        <div class="gate-item" draggable="true" data-type="OUTPUT">
+                            <i class="fa-solid fa-lightbulb"></i>
+                            <span>LED Bulb (Out)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3><i class="fa-solid fa-circle-nodes"></i> Basic Logic Gates</h3>
+                    <div class="gate-grid">
+                        <div class="gate-item" draggable="true" data-type="NOT">
+                            <span class="gate-badge">NOT</span>
+                            <span>NOT Gate</span>
+                        </div>
+                        <div class="gate-item" draggable="true" data-type="AND">
+                            <span class="gate-badge">AND</span>
+                            <span>AND Gate</span>
+                        </div>
+                        <div class="gate-item" draggable="true" data-type="OR">
+                            <span class="gate-badge">OR</span>
+                            <span>OR Gate</span>
+                        </div>
+                        <div class="gate-item" draggable="true" data-type="NAND">
+                            <span class="gate-badge">NAND</span>
+                            <span>NAND Gate</span>
+                        </div>
+                        <div class="gate-item" draggable="true" data-type="NOR">
+                            <span class="gate-badge">NOR</span>
+                            <span>NOR Gate</span>
+                        </div>
+                        <div class="gate-item" draggable="true" data-type="XOR">
+                            <span class="gate-badge">XOR</span>
+                            <span>XOR Gate</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3><i class="fa-solid fa-gears"></i> Sub-Circuits & Latches</h3>
+                    <div class="gate-grid">
+                        <div class="gate-item" draggable="true" data-type="HALF_ADDER">
+                            <span class="gate-badge adder">H-ADD</span>
+                            <span>Half Adder</span>
+                        </div>
+                        <div class="gate-item" draggable="true" data-type="FULL_ADDER">
+                            <span class="gate-badge adder">F-ADD</span>
+                            <span>Full Adder</span>
+                        </div>
+                        <div class="gate-item" draggable="true" data-type="MUX">
+                            <span class="gate-badge mux">MUX</span>
+                            <span>2:1 MUX</span>
+                        </div>
+                        <div class="gate-item" draggable="true" data-type="DEMUX">
+                            <span class="gate-badge mux">DEMUX</span>
+                            <span>1:2 DEMUX</span>
+                        </div>
+                        <div class="gate-item" draggable="true" data-type="SR_FLIPFLOP">
+                            <span class="gate-badge sequential">SR FF</span>
+                            <span>SR Flip-Flop</span>
+                        </div>
+                        <div class="gate-item" draggable="true" data-type="D_FLIPFLOP">
+                            <span class="gate-badge sequential">D FF</span>
+                            <span>D Flip-Flop</span>
+                        </div>
+                        <div class="gate-item" draggable="true" data-type="JK_FLIPFLOP">
+                            <span class="gate-badge sequential">JK FF</span>
+                            <span>JK Flip-Flop</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3><i class="fa-solid fa-wand-magic-sparkles"></i> Circuit Presets</h3>
+                    <div class="presets-list">
+                        <button id="preset-half-adder" class="btn btn-sidebar"><i class="fa-solid fa-plus-minus"></i>
+                            Spawn Half Adder</button>
+                        <button id="preset-full-adder" class="btn btn-sidebar"><i class="fa-solid fa-calculator"></i>
+                            Spawn Full Adder</button>
+                        <button id="preset-sr-latch" class="btn btn-sidebar"><i class="fa-solid fa-infinity"></i>
+                            Sequential Flip-Flop Loop</button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Editor Viewport (HTML5 Canvas + Overlay info) -->
+            <main class="editor-viewport">
+                <canvas id="circuit-canvas"></canvas>
+
+                <!-- Status/Toast Message bar -->
+                <div id="toast" class="toast hidden">
+                    <span class="toast-text">Toast Message</span>
+                </div>
+
+                <!-- Floating Canvas Toolbar -->
+                <div class="canvas-controls">
+                    <button id="zoom-in" title="Zoom In"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+                    <button id="zoom-out" title="Zoom Out"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+                    <button id="zoom-reset" title="Reset view"><i class="fa-solid fa-expand"></i></button>
+                    <div class="divider"></div>
+                    <span class="instruction-badge"><i class="fa-solid fa-circle-question"></i> Drag ports to connect.
+                        Double click connection to delete. Click switch to toggle.</span>
+                </div>
+            </main>
+
+            <!-- Right drawer: Truth Table, Karnaugh Map & Expression Logic -->
+            <aside class="right-drawer">
+                <div class="drawer-tabs">
+                    <button class="drawer-tab active" data-target="panel-truth-table"><i class="fa-solid fa-table"></i>
+                        Truth Table</button>
+                    <button class="drawer-tab" data-target="panel-kmap"><i class="fa-solid fa-border-all"></i>
+                        K-Map</button>
+                </div>
+
+                <div class="drawer-content">
+                    <!-- Truth Table Panel -->
+                    <div id="panel-truth-table" class="panel active">
+                        <div class="panel-header">
+                            <h4>Dynamic Truth Table</h4>
+                            <button id="btn-generate-table" class="btn btn-primary btn-sm"><i
+                                    class="fa-solid fa-rotate"></i> Compute</button>
+                        </div>
+                        <p class="panel-desc">Calculates truth values matching custom input switches (In A, B, C...) to
+                            all output LED lamps.</p>
+                        <div class="table-container" id="truth-table-container">
+                            <div class="empty-state">
+                                <i class="fa-solid fa-chart-line"></i>
+                                <p>Click Compute to analyze the logic circuit.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- K-Map Panel -->
+                    <div id="panel-kmap" class="panel">
+                        <div class="panel-header">
+                            <h4>Karnaugh Map (K-Map)</h4>
+                            <button id="btn-generate-kmap" class="btn btn-primary btn-sm"><i
+                                    class="fa-solid fa-border-all"></i> Draw Map</button>
+                        </div>
+                        <p class="panel-desc">Generate 2, 3, or 4-variable Karnaugh Map from the current circuit
+                            connections.</p>
+                        <div class="kmap-container" id="kmap-container">
+                            <div class="empty-state">
+                                <i class="fa-solid fa-cubes"></i>
+                                <p>Generate K-Map to visualize Boolean minimization loops.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Script imports -->
+    <script src="simulator.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
